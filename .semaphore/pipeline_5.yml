@@ -1,14 +1,14 @@
 version: v1.0
-name: 'Stage ${{ parameters.SVC }}'
+name: 'Prod deploy ${{ parameters.SVC }}'
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Staging
+  - name: Deploy
     task:
       jobs:
-        - name: Deploy
+        - name: Prod
           commands:
             - checkout
             - cd "services/$SVC"
@@ -24,18 +24,4 @@ blocks:
         - name: heroku-tomfern
       env_vars:
         - name: ENV
-          value: staging
-  - name: Smoke tests
-    task:
-      env_vars:
-        - name: ENV
-          value: staging
-      jobs:
-        - name: Test
-          commands:
-            - 'curl "https://monorepo-${SVC}-${ENV}.herokuapp.com"'
-promotions:
-  - name: Prod users
-    pipeline_file: pipeline_5.yml
-    auto_promote:
-      when: change_in('/services/users') AND result = 'passed'
+          value: prod
