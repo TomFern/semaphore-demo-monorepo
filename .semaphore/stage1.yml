@@ -39,3 +39,13 @@ promotions:
     pipeline_file: pipeline_5.yml
     auto_promote:
       when: change_in('/services/users') AND result = 'passed'
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: users
+          description: Service to deploy
+          name: SVC
