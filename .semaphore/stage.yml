@@ -1,0 +1,73 @@
+version: v1.0
+name: 'Stage ${{ parameters.SVC }}'
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Stage
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - checkout
+            - cd "services/$SVC"
+            - git init
+            - git config user.email "$HEROKU_EMAIL"
+            - git config user.name "$HEROKU_EMAIL"
+            - 'git config credential.helper ''!f() { printf "%s\n" "username=''$HEROKU_EMAIL''" "password=''$HEROKU_API_KEY''"; };f'''
+            - 'heroku git:remote -a "monorepo-${SVC}-staging"'
+            - git add .
+            - 'git commit -m "deploy monorepo-${SVC}-staging to Heroku"'
+            - git push heroku master --force
+      secrets:
+        - name: heroku-tomfern
+  - name: Smoke tests
+    task:
+      jobs:
+        - name: Tests
+          commands:
+            - 'curl "monorepo-${SVC}-staging.herokuapp.com/"'
+promotions:
+  - name: Deploy users
+    pipeline_file: deploy.yml
+    auto_promote:
+      when: 'change_in(''/services/users/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: users
+          description: What service to deploy?
+          name: SVC
+  - name: Deploy billing
+    pipeline_file: deploy.yml
+    auto_promote:
+      when: 'change_in(''/services/billing/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: billing
+          description: What service to deploy?
+          name: SVC
+  - name: Deploy ui
+    pipeline_file: deploy.yml
+    auto_promote:
+      when: 'change_in(''/services/ui/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: ui
+          description: What service to deploy?
+          name: SVC

@@ -1,5 +1,5 @@
 version: v1.0
-name: Parameterized promotions example
+name: Monorepo Demo
 agent:
   machine:
     type: e1-standard-2
@@ -8,7 +8,7 @@ blocks:
   - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
     dependencies: []
     run:
-      when: 'change_in(''/services/ui'', {exclude: ''/services/ui/**/*.md'', pipeline_file: ''ignore''})'
+      when: 'change_in(''/services/ui'', {exclude: ''/services/ui/**/*.md''})'
     task:
       prologue:
         commands:
@@ -31,7 +31,7 @@ blocks:
   - name: "\U0001F64E — User Service"
     dependencies: []
     run:
-      when: 'change_in(''/services/users'', {exclude: ''/services/users/**/*.md'', pipeline_file: ''ignore''})'
+      when: 'change_in(''/services/users'', {exclude: ''/services/users/**/*.md''})'
     task:
       prologue:
         commands:
@@ -51,7 +51,7 @@ blocks:
   - name: "\U0001F4B0 — Billing Service"
     dependencies: []
     run:
-      when: 'change_in(''/services/billing'', {exclude: ''/services/billing/**/*.md'', pipeline_file: ''ignore''})'
+      when: 'change_in(''/services/billing'', {exclude: ''/services/billing/**/*.md''})'
     task:
       prologue:
         commands:
@@ -69,46 +69,14 @@ blocks:
           commands:
             - go test ./...
 promotions:
-  - name: Stage users
-    pipeline_file: stage.yml
-    auto_promote:
-      when: 'change_in(''/services/users/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
+  - name: Stage service
+    pipeline_file: parametrized-stage.yml
     parameters:
       env_vars:
         - required: true
           options:
             - users
             - billing
-            - ui
           default_value: users
-          description: What service to deploy?
-          name: SVC
-  - name: Stage billing
-    pipeline_file: stage.yml
-    auto_promote:
-      when: 'change_in(''/services/billing/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
-    parameters:
-      env_vars:
-        - required: true
-          options:
-            - users
-            - billing
-            - ui
-          default_value: billing
-          description: What service to deploy?
-          name: SVC
-  - name: Stage ui
-    pipeline_file: stage.yml
-    auto_promote:
-      when: 'change_in(''/services/billing/'', {default_branch: ''master'', pipeline_file: ''ignore''})'
-    parameters:
-      env_vars:
-        - required: true
-          options:
-            - users
-            - billing
-            - ui
-          default_value: ui
-          description: What service to deploy?
-          name: SVC
-
+          description: What to deploy?
+          name: SERVICE

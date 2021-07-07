@@ -1,0 +1,24 @@
+version: v1.0
+name: 'Deploy ${{ parameters.SVC }}'
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: 'Production ${{ parameters.SVC }}'
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - checkout
+            - cd "services/$SVC"
+            - git init
+            - git config user.email "$HEROKU_EMAIL"
+            - git config user.name "$HEROKU_EMAIL"
+            - 'git config credential.helper ''!f() { printf "%s\n" "username=''$HEROKU_EMAIL''" "password=''$HEROKU_API_KEY''"; };f'''
+            - 'heroku git:remote -a "monorepo-${SVC}"'
+            - git add .
+            - 'git commit -m "deploy monorepo-${SVC} to Heroku"'
+            - git push heroku master --force
+      secrets:
+        - name: heroku-tomfern
