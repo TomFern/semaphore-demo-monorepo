@@ -47,3 +47,33 @@ promotions:
           default_value: users
           description: What to deploy?
           name: SVC
+    auto_promote:
+      when: branch = 'master' AND result = 'passed' and change_in('/services/users/')
+  - name: Prod billing
+    pipeline_file: prod-deploy.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed' and change_in('/services/billing/')
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: billing
+          description: What to deploy?
+          name: SVC
+  - name: Prod ui
+    pipeline_file: prod-deploy.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed' and change_in('/services/ui/')
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: ui
+          description: What to deploy?
+          name: SVC
