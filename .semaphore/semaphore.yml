@@ -83,6 +83,13 @@ promotions:
           default_value: users
           description: What service to stage?
           name: SVC
+        - required: true
+          options:
+            - staging
+            - prod
+          default_value: staging
+          description: Where to deploy?
+          name: ENV
   - name: Stage billing
     pipeline_file: stage.yml
     auto_promote:
@@ -97,6 +104,13 @@ promotions:
           default_value: billing
           description: What service to stage?
           name: SVC
+        - required: true
+          options:
+            - staging
+            - prod
+          default_value: staging
+          description: Where to deploy?
+          name: ENV
   - name: Stage ui
     pipeline_file: stage.yml
     auto_promote:
@@ -111,3 +125,10 @@ promotions:
           default_value: ui
           description: What service to stage?
           name: SVC
+        - required: true
+          options:
+            - staging
+            - prod
+          default_value: staging
+          description: Where to deploy?
+          name: ENV
