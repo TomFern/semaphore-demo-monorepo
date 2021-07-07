@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Prod
+  - name: Stage
     task:
       jobs:
         - name: Deploy
@@ -24,4 +24,26 @@ blocks:
         - name: heroku-tomfern
       env_vars:
         - name: ENV
-          value: prod
+          value: staging
+  - name: Smoke tests
+    task:
+      env_vars:
+        - name: ENV
+          value: staging
+      jobs:
+        - name: Test
+          commands:
+            - 'curl "https://monorepo-${SVC}-${ENV}.herokuapp.com"'
+promotions:
+  - name: Prod users
+    pipeline_file: prod-deploy.yml
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - users
+            - billing
+            - ui
+          default_value: users
+          description: What to deploy?
+          name: SVC
