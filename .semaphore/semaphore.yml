@@ -83,7 +83,7 @@ blocks:
             - go test ./...
             - go build -v .
 promotions:
-  - name: Promotion 1
+  - name: Stage users
     pipeline_file: pipeline_4.yml
     parameters:
       env_vars:
@@ -95,3 +95,13 @@ promotions:
           default_value: a
           description: Sets an important value for my deployment
           name: MY_VARIABLE
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
+  - name: Stage billing
+    pipeline_file: pipeline_5.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
+  - name: Stage ui
+    pipeline_file: pipeline_6.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
