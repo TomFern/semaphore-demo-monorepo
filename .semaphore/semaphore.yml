@@ -85,5 +85,13 @@ blocks:
 promotions:
   - name: Promotion 1
     pipeline_file: pipeline_4.yml
-    auto_promote:
-      when: branch = 'master' AND result = 'passed'
+    parameters:
+      env_vars:
+        - required: true
+          options:
+            - a
+            - b
+            - c
+          default_value: a
+          description: Sets an important value for my deployment
+          name: MY_VARIABLE
