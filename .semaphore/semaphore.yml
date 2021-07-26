@@ -1,5 +1,5 @@
 version: v1.0
-name: Parameterized promotions example
+name: Initial Pipeline
 agent:
   machine:
     type: e1-standard-2
@@ -82,3 +82,6 @@ blocks:
             - go get ./...
             - go test ./...
             - go build -v .
+promotions:
+  - name: Promotion 1
+    pipeline_file: pipeline_4.yml
