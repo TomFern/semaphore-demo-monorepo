@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
+  - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI service"
     dependencies: []
     run:
       when: 'change_in(''/services/ui'', {exclude: ''/services/ui/**/*.md'', pipeline_file: ''ignore''})'
@@ -22,13 +22,19 @@ blocks:
           - mix deps.compile
           - cache store
       jobs:
-        - name: Lint
+        - name: elixir test
           commands:
-            - mix credo
-        - name: Test
-          commands:
+            - checkout
+            - cd services/ui
+            - sem-version elixir 1.9
+            - cache restore
+            - mix local.hex --force
+            - mix local.rebar --force
+            - mix deps.get
+            - mix deps.compile
+            - cache store
             - mix test
-  - name: "\U0001F64E — User Service"
+  - name: "\U0001F464 — User service"
     dependencies: []
     run:
       when: 'change_in(''/services/users'', {exclude: ''/services/users/**/*.md'', pipeline_file: ''ignore''})'
@@ -42,13 +48,16 @@ blocks:
           - bundle install
           - cache store
       jobs:
-        - name: Lint
+        - name: ruby test
           commands:
-            - bundle exec rubocop
-        - name: Test
-          commands:
+            - sem-version ruby 2.5
+            - checkout
+            - cd services/users
+            - cache restore
+            - bundle install
+            - cache store
             - bundle exec ruby test.rb
-  - name: "\U0001F4B0 — Billing Service"
+  - name: "\U0001F4B0 — Billing service"
     dependencies: []
     run:
       when: 'change_in(''/services/billing'', {exclude: ''/services/billing/**/*.md'', pipeline_file: ''ignore''})'
@@ -62,24 +71,14 @@ blocks:
           - go get ./...
           - cache store
       jobs:
-        - name: Lint
+        - name: go test
           commands:
-            - gofmt -l .
-        - name: Test
-          commands:
+            - sem-version go 1.14
+            - export GO111MODULE=on
+            - export GOPATH=~/go
+            - 'export PATH=/home/semaphore/go/bin:$PATH'
+            - checkout
+            - cd services/billing
+            - go get ./...
             - go test ./...
-promotions:
-  - name: Stage users
-    pipeline_file: stage1.yml
-    auto_promote:
-      when: change_in('/services/users') AND result = 'passed'
-    parameters:
-      env_vars:
-        - required: true
-          options:
-            - users
-            - billing
-            - ui
-          default_value: users
-          description: Service to stage
-          name: SVC
+            - go build -v .
