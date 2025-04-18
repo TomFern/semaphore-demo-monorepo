@@ -2,8 +2,8 @@ version: v1.0
 name: Monorepo Demo
 agent:
   machine:
-    type: e1-standard-2
-    os_image: ubuntu2004
+    type: s1-kubernetes
+    os_image: ''
 blocks:
   - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
     dependencies: []
@@ -14,7 +14,7 @@ blocks:
         commands:
           - checkout
           - cd services/ui
-          - sem-version elixir 1.17
+          - '#sem-version elixir 1.16'
           - cache restore
           - mix local.hex --force
           - mix local.rebar --force
@@ -28,6 +28,13 @@ blocks:
         - name: Test
           commands:
             - mix test
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/elixir:1.16'
   - name: "\U0001F64E — User Service"
     dependencies: []
     run:
@@ -37,7 +44,7 @@ blocks:
         commands:
           - checkout
           - cd services/users
-          - sem-version ruby 2.7
+          - '#sem-version ruby 2.7'
           - cache restore
           - bundle install
           - cache store
@@ -48,6 +55,13 @@ blocks:
         - name: Test
           commands:
             - bundle exec ruby test.rb
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/ruby:2.7'
   - name: "\U0001F4B0 — Billing Service"
     dependencies: []
     run:
@@ -57,7 +71,7 @@ blocks:
         commands:
           - checkout
           - cd services/billing
-          - sem-version go 1.22
+          - '#sem-version go 1.22'
           - cache restore
           - go get ./...
           - cache store
@@ -68,3 +82,10 @@ blocks:
         - name: Test
           commands:
             - go test ./...
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/golang:1.22'
