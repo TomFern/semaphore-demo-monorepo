@@ -2,8 +2,8 @@ version: v1.0
 name: Monorepo Demo
 agent:
   machine:
-    type: e1-standard-2
-    os_image: ubuntu2004
+    type: s1-kubernetes
+    os_image: ''
 blocks:
   - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
     dependencies: []
