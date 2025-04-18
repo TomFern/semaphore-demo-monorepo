@@ -26,6 +26,13 @@ blocks:
         - name: Test
           commands:
             - mix test
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/elixir:1.16'
   - name: "\U0001F64E — User Service"
     dependencies: []
     task:
@@ -44,6 +51,13 @@ blocks:
         - name: Test
           commands:
             - bundle exec ruby test.rb
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/ruby:2.7'
   - name: "\U0001F4B0 — Billing Service"
     dependencies: []
     task:
@@ -62,3 +76,10 @@ blocks:
         - name: Test
           commands:
             - go test ./...
+      agent:
+        machine:
+          type: s1-kubernetes
+          os_image: ''
+        containers:
+          - name: main
+            image: 'registry.semaphoreci.com/golang:1.22'
