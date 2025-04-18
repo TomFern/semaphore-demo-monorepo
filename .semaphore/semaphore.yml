@@ -4,6 +4,9 @@ agent:
   machine:
     type: s1-kubernetes
     os_image: ''
+  containers:
+    - name: main
+      image: 'semaphoreci/ubuntu:20.04'
 blocks:
   - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
     dependencies: []
