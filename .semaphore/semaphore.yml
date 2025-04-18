@@ -4,20 +4,15 @@ agent:
   machine:
     type: s1-kubernetes
     os_image: ''
-  containers:
-    - name: main
-      image: 'semaphoreci/ubuntu:20.04'
 blocks:
   - name: "\U0001F469\U0001F3FB‍\U0001F3A8 — UI Service"
     dependencies: []
-    run:
-      when: 'change_in(''/services/ui'', {exclude: ''/services/ui/**/*.md'', pipeline_file: ''ignore'' })'
     task:
       prologue:
         commands:
           - checkout
           - cd services/ui
-          - '#sem-version elixir 1.16'
+          - '#sem-version elixir 1.17'
           - cache restore
           - mix local.hex --force
           - mix local.rebar --force
@@ -31,17 +26,8 @@ blocks:
         - name: Test
           commands:
             - mix test
-      agent:
-        machine:
-          type: s1-kubernetes
-          os_image: ''
-        containers:
-          - name: main
-            image: 'registry.semaphoreci.com/elixir:1.16'
   - name: "\U0001F64E — User Service"
     dependencies: []
-    run:
-      when: 'change_in(''/services/users'', {exclude: ''/services/users/**/*.md'', pipeline_file: ''ignore'' })'
     task:
       prologue:
         commands:
@@ -58,17 +44,8 @@ blocks:
         - name: Test
           commands:
             - bundle exec ruby test.rb
-      agent:
-        machine:
-          type: s1-kubernetes
-          os_image: ''
-        containers:
-          - name: main
-            image: 'registry.semaphoreci.com/ruby:2.7'
   - name: "\U0001F4B0 — Billing Service"
     dependencies: []
-    run:
-      when: 'change_in(''/services/billing'', {exclude: ''/services/billing/**/*.md'', pipeline_file: ''ignore'' })'
     task:
       prologue:
         commands:
@@ -85,10 +62,3 @@ blocks:
         - name: Test
           commands:
             - go test ./...
-      agent:
-        machine:
-          type: s1-kubernetes
-          os_image: ''
-        containers:
-          - name: main
-            image: 'registry.semaphoreci.com/golang:1.22'
