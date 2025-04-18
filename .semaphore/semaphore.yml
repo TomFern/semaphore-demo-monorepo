@@ -67,7 +67,7 @@ blocks:
           - cd services/billing
           - '#sem-version go 1.22'
           - cache restore
-          - go get ./...
+          - /usr/local/go/bin/go get ./...
           - cache store
       jobs:
         - name: Lint
