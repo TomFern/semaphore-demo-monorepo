@@ -72,10 +72,10 @@ blocks:
       jobs:
         - name: Lint
           commands:
-            - gofmt -l .
+            - /usr/local/go/bin/gofmt -l .
         - name: Test
           commands:
-            - go test ./...
+            - /usr/local/go/bin/go test ./...
       agent:
         machine:
           type: s1-kubernetes
