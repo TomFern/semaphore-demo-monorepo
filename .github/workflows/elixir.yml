@@ -36,10 +36,10 @@ jobs:
     - name: Install dependencies
       working-directory: ./services/ui
       run: |
-        # - mix local.hex --force
-        # - mix local.rebar --force
-        - mix deps.get
-        # - mix deps.compile
+        mix local.hex --force
+        mix local.rebar --force
+        mix deps.get
+         mix deps.compile
     - name: Lint
       working-directory: ./services/ui
       run: mix credo
