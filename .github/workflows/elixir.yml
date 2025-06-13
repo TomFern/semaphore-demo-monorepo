@@ -35,10 +35,10 @@ jobs:
         restore-keys: ${{ runner.os }}-mix-
     - name: Install dependencies
       run: |
-        - mix local.hex --force
-        - mix local.rebar --force
+        # - mix local.hex --force
+        # - mix local.rebar --force
         - mix deps.get
-        - mix deps.compile
+        # - mix deps.compile
     - name: Lint
       run: mix credo
     - name: Run tests
