@@ -8,6 +8,8 @@ name: Elixir CI
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'services/ui/**'
   pull_request:
     branches: [ "master" ]
 

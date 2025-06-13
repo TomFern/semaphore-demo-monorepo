@@ -10,6 +10,8 @@ name: Ruby
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'services/ruby/**'
   pull_request:
     branches: [ "master" ]
 
@@ -36,6 +38,9 @@ jobs:
       working-directory: ./services/users
       run: bundle install
 
+    - name: Lint
+      working-directory: ./services/users
+      run: bundle exec rubocop
     - name: Run tests
       working-directory: ./services/users
       run: bundle exec ruby test.rb
