@@ -40,10 +40,5 @@ Copyright (c) 2021 Rendered Text
 
 Distributed under the MIT License. See the file LICENSE.
 
-[semaphore]: https://semaphoreci.com
-[create-project]: https://docs.semaphoreci.com/article/63-your-first-project
-[change-in]: https://docs.semaphoreci.com/reference/conditions-reference/#change_in
-[monorepo]: https://docs.semaphoreci.com/essentials/building-monorepo-projects/
 
-
-
+test
